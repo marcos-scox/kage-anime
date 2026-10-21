@@ -1,0 +1,1 @@
+{"routes":[{"path":"/","title":"Início"},{"path":"/explorar","title":"Explorar"},{"path":"/minha-lista","title":"Minha lista"},{"path":"/historico","title":"Histórico"},{"path":"/perfil","title":"Perfil"},{"path":"/anime/:id","title":"Detalhes do anime"},{"path":"/assistir/:animeId/:episode","title":"Reprodução"}]}

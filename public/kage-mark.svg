@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">KAGE ANIME</title>
+  <defs>
+    <linearGradient id="kage" x1="38" y1="218" x2="214" y2="38" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8B5CF6"/>
+      <stop offset="1" stop-color="#C4B5FD"/>
+    </linearGradient>
+  </defs>
+  <path d="M128 18a110 110 0 1 0 109 125 91 91 0 1 1-109-125Z" fill="url(#kage)"/>
+  <path d="M75 67h25v51l49-51h34l-59 61 63 61h-36l-51-51v51H75V67Z" fill="#F8FAFC"/>
+  <path d="m143 75 29-29M45 176l18 8" fill="none" stroke="#A78BFA" stroke-linecap="round" stroke-width="8" opacity=".8"/>
+</svg>

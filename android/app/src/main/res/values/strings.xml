@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">KAGE ANIME</string>
+    <string name="title_activity_main">KAGE ANIME</string>
+    <string name="package_name">br.com.kageanime</string>
+    <string name="custom_url_scheme">br.com.kageanime</string>
+</resources>

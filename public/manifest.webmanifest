@@ -1,0 +1,13 @@
+{
+  "name": "KAGE ANIME",
+  "short_name": "KAGE",
+  "description": "Explore animes, acompanhe sua lista e retome seu histórico.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#09090f",
+  "theme_color": "#09090f",
+  "icons": [
+    { "src": "/kage-mark.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
