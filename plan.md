@@ -6,7 +6,11 @@ Construir um aplicativo Android-first em português do Brasil com **React, Vite,
 
 O catálogo público será obtido da Jikan API por uma camada de serviço tipada e substituível. A camada tratará busca com debounce/cancelamento, cache, paginação, limites da API e dados ausentes. Os metadados da Jikan não serão tratados como autorização ou disponibilidade de vídeo. As imagens dos animes virão da API; não serão embutidas imagens de terceiros sem licença clara nem títulos demonstrativos apresentados como reais.
 
+**Decisão de escopo (2026-10-21):** esta versão consulta somente a Jikan. A AniList permanece desativada até haver autorização escrita para o uso neste aplicativo; conta GitHub não é autenticação nem autorização da AniList. A consulta ao endpoint público Jikan não pôde ser validada pelo Sandbox nesta revisão (falha TLS), portanto disponibilidade ao vivo depende da rede/API do dispositivo.
+
 Rotas com React Router: início (`/`), explorar (`/explorar`), minha lista (`/minha-lista`), histórico (`/historico`), perfil (`/perfil`), detalhes (`/anime/:id`) e reprodução (`/assistir/:animeId/:episode`). A navegação inferior fixa terá cinco destinos. No Android, `@capacitor/app` encaminhará o botão físico voltar ao histórico React Router; numa rota sem histórico, voltará ao início e, no início, permitirá sair do aplicativo. O histórico e os favoritos funcionarão primeiro em armazenamento local com dados mínimos para exibição offline; a interface continuará navegável sem rede e explicará quando uma operação depender dela.
+
+O player receberá exclusivamente fontes próprias, licenciadas ou explicitamente autorizadas para incorporação. Como a Jikan não fornece fontes licenciadas, a ausência de fonte resultará em uma tela de indisponibilidade clara, sem vídeos, URLs ou idiomas inventados. O componente poderá atender uma fonte autorizada futura, mas não tentará extrair links nem contornar proteções.
 
 O player receberá exclusivamente fontes próprias, licenciadas ou explicitamente autorizadas para incorporação. Como a Jikan não fornece fontes licenciadas, a ausência de fonte resultará em uma tela de indisponibilidade clara, sem vídeos, URLs ou idiomas inventados. O componente poderá atender uma fonte autorizada futura, mas não tentará extrair links nem contornar proteções.
 

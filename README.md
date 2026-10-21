@@ -12,6 +12,7 @@ O APK é destinado a instalação e testes, pacote `br.com.kageanime`, `minSdk 2
 
 - Início, Explorar, detalhes, Minha lista, Histórico e Perfil, com navegação Android.
 - Catálogo e metadados via Jikan, com busca, filtros disponíveis, cache, paginação e estados offline/erro.
+- AniList não é consultada nesta versão; sua integração fica suspensa até autorização escrita para este tipo de aplicativo.
 - Favoritos e dados do usuário guardados localmente; autenticação e sincronização Supabase opcionais.
 - Player que só aceita fonte própria, licenciada ou explicitamente autorizada. **Esta build não contém uma fonte de vídeo autorizada**, então não reproduz streams; mostra a indisponibilidade e, quando fornecidos pelo catálogo, links externos de onde assistir. Não inclui vídeos, listas clandestinas ou contorno de DRM.
 
