@@ -22,10 +22,10 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,webmanifest,woff2}'],
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/api\.jikan\.moe\/v4\/.*/,
+            urlPattern: /^https:\/\/api\.tenrai\.org\/v1\/.*/,
             handler: 'NetworkFirst',
             options: {
-              cacheName: 'jikan-metadata-v1',
+              cacheName: 'tenrai-metadata-v1',
               networkTimeoutSeconds: 4,
               expiration: { maxEntries: 80, maxAgeSeconds: 60 * 60 * 24 }
             }
