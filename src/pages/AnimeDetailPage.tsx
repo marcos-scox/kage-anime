@@ -3,13 +3,10 @@ import { ArrowLeft, Bookmark, BookmarkCheck, CalendarDays, CircleAlert, Clapperb
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, LoadingState, Poster, StatePanel } from '../components/ui';
 import { getAnime, getAnimeEpisodes } from '../features/catalog/jikan';
+import { getMyAnimeListPage, getVerifiedStreamingLinks } from '../features/catalog/officialStreaming';
 import { useLibrary } from '../features/library/LibraryContext';
 import { isSafePlaybackSource, resolveAuthorizedPlaybackSource } from '../features/playback/sources';
 import type { AnimeEpisode, AnimeSummary, PageResult } from '../types/anime';
-
-function safeOfficialUrl(value: string): string | null {
-  try { const url = new URL(value); return url.protocol === 'https:' ? url.href : null; } catch { return null; }
-}
 
 function yearAndSeason(anime: AnimeSummary) {
   const pieces = [anime.year, anime.season].filter(Boolean);
@@ -67,11 +64,12 @@ export function AnimeDetailPage() {
   };
 
   if (loading) return <div className="page"><LoadingState label="Carregando detalhes…" /></div>;
-  if (error || !anime) return <div className="page"><StatePanel icon={<CircleAlert size={18} />} title="Detalhes indisponíveis" detail={error || 'A Jikan não retornou este título.'} action={<Button variant="subtle" onClick={() => navigate(-1)}><ArrowLeft size={15} /> Voltar</Button>} /></div>;
+  if (error || !anime) return <div className="page"><StatePanel icon={<CircleAlert size={18} />} title="Detalhes indisponíveis" detail={error || 'O catálogo Tenrai não retornou este título.'} action={<Button variant="subtle" onClick={() => navigate(-1)}><ArrowLeft size={15} /> Voltar</Button>} /></div>;
 
   const cover = anime.images.webp?.large_image_url || anime.images.jpg?.large_image_url || anime.images.webp?.image_url || anime.images.jpg?.image_url;
   const title = anime.title_english || anime.title;
-  const streams = (anime.streaming || []).map((item) => ({ ...item, href: safeOfficialUrl(item.url) })).filter((item): item is typeof item & { href: string } => Boolean(item.href));
+  const streams = getVerifiedStreamingLinks(anime.streaming);
+  const metadataPage = getMyAnimeListPage(anime.url);
   const playbackFor = (episode: AnimeEpisode) => {
     const source = resolveAuthorizedPlaybackSource(anime, episode);
     return source && isSafePlaybackSource(source) ? source : null;
@@ -101,10 +99,10 @@ export function AnimeDetailPage() {
         const row = <><span className="episode-row__number">{episode.mal_id}</span><span className="episode-row__title">{episode.title || `Episódio ${episode.mal_id}`}</span><span className="episode-row__play">{source ? <Play size={15} /> : <span aria-label="Sem fonte autorizada">—</span>}</span></>;
         return source ? <Link className="episode-row" key={episode.mal_id} to={`/assistir/${anime.mal_id}/${episode.mal_id}`}>{row}</Link> : <div className="episode-row episode-row--unavailable" key={episode.mal_id} aria-disabled="true">{row}</div>;
       })}</div>{hasMoreEpisodes && <Button variant="subtle" disabled={loadingMoreEpisodes} onClick={() => void loadMoreEpisodes()}>{loadingMoreEpisodes ? 'Carregando…' : 'Carregar mais episódios'}</Button>}{episodeError && <p className="auth-message auth-message--error">{episodeError}</p>}</> : <StatePanel icon={<CircleAlert size={17} />} title="Episódios não fornecidos" detail={episodeError || 'A fonte de metadados não disponibilizou uma lista de episódios.'} />}</section>
-      <section className="detail-block"><h2>Onde assistir</h2>{streams.length ? <><p className="muted-copy">Opções retornadas pelo catálogo. A disponibilidade pode variar por região e plano.</p><div className="stream-list">{streams.map((item) => <a className="stream-link" key={`${item.name}-${item.href}`} href={item.href} target="_blank" rel="noopener noreferrer"><span>{item.name}</span><ExternalLink size={14} /></a>)}</div></> : <StatePanel icon={<CircleAlert size={17} />} title="Nenhuma plataforma informada" detail="A Jikan não retornou uma opção para este anime. Não há uma fonte autorizada integrada no momento." />}</section>
+      <section className="detail-block"><h2>Onde assistir</h2>{streams.length ? <><p className="muted-copy">Plataformas oficiais reconhecidas pelo catálogo. Confirme a disponibilidade do título, região e plano no próprio serviço.</p><div className="stream-list">{streams.map((item) => <a className="stream-link" key={`${item.name}-${item.href}`} href={item.href} target="_blank" rel="noopener noreferrer"><span>{item.name}</span><ExternalLink size={14} /></a>)}</div></> : <StatePanel icon={<CircleAlert size={17} />} title="Nenhuma plataforma verificável informada" detail="O catálogo não indicou uma plataforma reconhecida por domínio oficial. Não há fonte autorizada de vídeo integrada." />}</section>
     </div><aside className="detail-sidebar"><section className="detail-block"><h2>Informações</h2><div className="detail-facts">
       {[['Status', anime.status], ['Temporada', anime.season], ['Ano', anime.year], ['Episódios', anime.episodes], ['Duração', anime.duration], ['Classificação', anime.rating], ['Origem', anime.source]].filter(([, value]) => value !== null && value !== undefined && value !== '').map(([label, value]) => <div className="detail-fact" key={String(label)}><span>{label}</span><span>{String(value)}</span></div>)}
-      <div className="detail-fact"><span>Catálogo</span>{safeOfficialUrl(anime.url) ? <a href={safeOfficialUrl(anime.url) || undefined} target="_blank" rel="noopener noreferrer">Ver fonte ↗</a> : <span>Jikan</span>}</div>
+      <div className="detail-fact"><span>Metadados</span>{metadataPage ? <a href={metadataPage} target="_blank" rel="noopener noreferrer">Ficha MyAnimeList ↗</a> : <span>Tenrai</span>}</div>
     </div></section></aside></div>
     <div className="detail-back"><Link className="text-link" to="/explorar"><ArrowLeft size={15} /> Voltar para explorar</Link></div>
   </div>;

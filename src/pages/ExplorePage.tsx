@@ -64,7 +64,7 @@ export function ExplorePage() {
   const changeFilter = (setter: (value: never) => void, value: string) => { setter(value as never); setPage(1); };
 
   return <div className="page">
-    <div className="page-header"><div><span className="eyebrow">CATÁLOGO JIKAN</span><h1>Explorar</h1><p>Encontre um título pelo nome ou refine a seleção.</p></div></div>
+    <div className="page-header"><div><span className="eyebrow">CATÁLOGO TENRAI</span><h1>Explorar</h1><p>Encontre um título pelo nome ou refine a seleção.</p></div></div>
     {offline && <StatePanel icon={<WifiOff size={18} />} title="Busca precisa de internet" detail="Mostramos apenas resultados que já foram salvos neste dispositivo." />}
     <section className="search-panel" aria-label="Pesquisa e filtros">
       <form className="search-form" onSubmit={onSubmit}>

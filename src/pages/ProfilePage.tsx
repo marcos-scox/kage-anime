@@ -77,5 +77,9 @@ export function ProfilePage() {
     </form>}
     {syncError && <p className="auth-message auth-message--error" role="alert">{syncError}</p>}
     {supabaseConfigured && userId && (error || message) && <p className={`auth-message ${error ? 'auth-message--error' : ''}`}>{error || message}</p>}
+    <section className="profile-card" style={{ marginTop: 16 }}>
+      <h2>Fonte do catálogo</h2>
+      <p>Metadados fornecidos pela Tenrai API v1, serviço não oficial compatível com o formato Jikan v4. Não há afiliação com a MyAnimeList. Dados podem estar desatualizados; direitos de títulos, imagens e marcas pertencem aos respectivos titulares.</p>
+    </section>
   </div>;
 }

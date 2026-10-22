@@ -3,11 +3,10 @@ import { ArrowLeft, CircleAlert, ExternalLink, Maximize, Play, RotateCcw } from 
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, LoadingState } from '../components/ui';
 import { getAnime, getAnimeEpisodes } from '../features/catalog/jikan';
+import { getVerifiedStreamingLinks } from '../features/catalog/officialStreaming';
 import { isSafePlaybackSource, resolveAuthorizedPlaybackSource } from '../features/playback/sources';
 import { useLibrary } from '../features/library/LibraryContext';
 import type { AnimeEpisode, AnimeSummary } from '../types/anime';
-
-function safeUrl(value: string) { try { const url = new URL(value); return url.protocol === 'https:' ? url.href : null; } catch { return null; } }
 
 export function PlayerPage() {
   const { animeId: rawAnimeId, episode: rawEpisode } = useParams();
@@ -40,7 +39,7 @@ export function PlayerPage() {
   const source = anime ? resolveAuthorizedPlaybackSource(anime, episode) : null;
   const allowedSource = source && isSafePlaybackSource(source) ? source : null;
   const previousProgress = history.find((item) => item.anime.mal_id === animeId && item.episodeNumber === episodeNumber);
-  const streams = anime?.streaming?.map((item) => ({ ...item, href: safeUrl(item.url) })).filter((item): item is typeof item & { href: string } => Boolean(item.href)) ?? [];
+  const streams = getVerifiedStreamingLinks(anime?.streaming);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -99,9 +98,9 @@ export function PlayerPage() {
 
   return <div className="player-page">
     <div className="player-top"><button className="player-top__back" onClick={() => navigate(-1)} aria-label="Voltar"><ArrowLeft size={18} /> <span>{anime.title_english || anime.title}</span></button><button className="icon-button" aria-label="Abrir tela cheia e orientação horizontal" onClick={() => void goLandscape()}><Maximize size={17} /></button></div>
-    <section className="player-stage">{allowedSource ? <video ref={videoRef} controls playsInline autoPlay aria-label={`Reprodução de ${anime.title}`} /> : <div className="player-unavailable"><span className="player-unavailable__icon"><CircleAlert size={22} /></span><h1>Reprodução não disponível</h1><p>A Jikan fornece metadados, não direitos ou arquivos de transmissão. O KAGE ANIME só reproduz fontes próprias, licenciadas ou autorizadas; nenhuma fonte autorizada foi integrada para este episódio.</p>{message && <p>{message}</p>}{previousProgress && <p>Última posição salva: {Math.floor(previousProgress.positionSeconds / 60)}:{String(Math.floor(previousProgress.positionSeconds % 60)).padStart(2, '0')}{previousProgress.durationSeconds ? ` de ${Math.floor(previousProgress.durationSeconds / 60)}:${String(Math.floor(previousProgress.durationSeconds % 60)).padStart(2, '0')}` : ''}.</p>}</div>}</section>
+    <section className="player-stage">{allowedSource ? <video ref={videoRef} controls playsInline autoPlay aria-label={`Reprodução de ${anime.title}`} /> : <div className="player-unavailable"><span className="player-unavailable__icon"><CircleAlert size={22} /></span><h1>Reprodução não disponível</h1><p>Tenrai fornece metadados, não direitos ou arquivos de transmissão. O KAGE ANIME só reproduz fontes próprias, licenciadas ou autorizadas; nenhuma fonte autorizada foi integrada para este episódio.</p>{message && <p>{message}</p>}{previousProgress && <p>Última posição salva: {Math.floor(previousProgress.positionSeconds / 60)}:{String(Math.floor(previousProgress.positionSeconds % 60)).padStart(2, '0')}{previousProgress.durationSeconds ? ` de ${Math.floor(previousProgress.durationSeconds / 60)}:${String(Math.floor(previousProgress.durationSeconds % 60)).padStart(2, '0')}` : ''}.</p>}</div>}</section>
     <div className="player-info"><span className="eyebrow">KAGE · PLAYER</span><h2>{episode?.title || `Episódio ${episodeNumber}`}</h2><p>{anime.title_english || anime.title}</p>
-      {streams.length > 0 && <div className="stream-list">{streams.map((item) => <a className="stream-link" key={item.href} href={item.href} target="_blank" rel="noopener noreferrer"><span>Onde assistir · {item.name}</span><ExternalLink size={14} /></a>)}</div>}
+      {streams.length > 0 && <section className="detail-block"><h2>Onde assistir</h2><p className="muted-copy">Plataformas oficiais reconhecidas pelo catálogo; confirme a disponibilidade do título, região e plano no serviço.</p><div className="stream-list">{streams.map((item) => <a className="stream-link" key={item.href} href={item.href} target="_blank" rel="noopener noreferrer"><span>{item.name}</span><ExternalLink size={14} /></a>)}</div></section>}
       {episodes.length > 0 && <section className="detail-block"><h2>Selecionar episódio</h2><div className="player-episode-list">{episodes.map((item) => <button key={item.mal_id} className={`player-episode-chip ${item.mal_id === episodeNumber ? 'is-active' : ''}`} onClick={() => navigate(`/assistir/${animeId}/${item.mal_id}`)}><strong>EP {item.mal_id} {item.mal_id === episodeNumber ? '· atual' : ''}</strong><span>{item.title || `Episódio ${item.mal_id}`}</span></button>)}</div></section>}
       <div className="detail-actions"><Link className="button button--ghost" to={`/anime/${animeId}`}><ArrowLeft size={14} /> Detalhes</Link>{episodeNumber > 1 && <Link className="button button--subtle" to={`/assistir/${animeId}/${episodeNumber - 1}`}><RotateCcw size={14} /> Episódio anterior</Link>}{anime.episodes && episodeNumber < anime.episodes && <Link className="button button--subtle" to={`/assistir/${animeId}/${episodeNumber + 1}`}><Play size={14} /> Próximo episódio</Link>}{!allowedSource && <Button variant="subtle" onClick={() => navigate(`/anime/${animeId}`)}>Voltar aos detalhes</Button>}</div>
     </div>

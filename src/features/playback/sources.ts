@@ -8,7 +8,7 @@ export interface AuthorizedPlaybackSource {
 }
 
 /**
- * Jikan carries metadata, not video rights or playable URLs. No providers have
+ * Tenrai carries metadata, not video rights or playable URLs. No providers have
  * been configured for this project, so this adapter deliberately returns null.
  * Add a provider only when its owner has explicitly authorized embedding.
  */
